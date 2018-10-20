@@ -5,11 +5,22 @@
 
 	<groupId>com.bankslip.api</groupId>
 	<artifactId>bankslip</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>bankslip</name>
-	<description>Demo project for Spring Boot</description>
+	<description>API Restful for Bank Splip</description>
+	
+	<developers>
+		<developer>
+			<name>Cristiano Firmino Rodrigues</name>
+			<email>cristianofirmino@gmail.com</email>
+			<url>https://br.linkedin.com/in/cristiano-firmino-rodrigues-3b283b44</url>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
