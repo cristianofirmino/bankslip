@@ -1,4 +1,4 @@
-package com.bankslip.api.bankslip;
+package com.bankslip.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

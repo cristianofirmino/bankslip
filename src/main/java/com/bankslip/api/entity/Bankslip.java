@@ -1,4 +1,4 @@
-package com.bankslip.api.bankslip.entity;
+package com.bankslip.api.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -7,23 +7,26 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
-import com.bankslip.api.bankslip.enums.StatusEnum;
+import com.bankslip.api.enums.StatusEnum;
 
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
  * Entity class Bankslip
+ * 
  * @author Cristiano Firmino
  *
  */
-@ToString
-@SuppressWarnings("serial")
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Entity
 @Table(name = "bankslips")
-public class Bankslip extends AbstractEntity<String> {
+public class Bankslip extends AbstractEntity {
 
 	private Date dueDate;
 	private Date created;
@@ -92,6 +95,7 @@ public class Bankslip extends AbstractEntity<String> {
 		this.updated = new Date();
 	}
 
+	@PrePersist
 	public void prePersist() {
 		final Date current = new Date();
 		this.created = current;

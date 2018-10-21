@@ -1,11 +1,10 @@
-package com.bankslip.api.bankslip.entity;
-
-import java.io.Serializable;
+package com.bankslip.api.entity;
 
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,16 +16,18 @@ import lombok.NoArgsConstructor;
  *
  * @param <ID>
  */
-@SuppressWarnings("serial")
 @Data
 @NoArgsConstructor
 @MappedSuperclass
-public abstract class AbstractEntity<ID extends Serializable> implements Serializable {
+public abstract class AbstractEntity {
 
 	/**
 	 * Identification attribute
 	 */
+	/*@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)*/
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private ID id;
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
+	private String id;
 }

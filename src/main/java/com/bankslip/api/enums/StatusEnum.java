@@ -1,4 +1,4 @@
-package com.bankslip.api.bankslip.enums;
+package com.bankslip.api.enums;
 
 public enum StatusEnum {
 	
