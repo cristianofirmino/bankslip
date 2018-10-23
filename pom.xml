@@ -3,13 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.bankslip.api</groupId>
-	<artifactId>bankslip</artifactId>
+	<groupId>com.bankslips.api</groupId>
+	<artifactId>bankslips</artifactId>
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>bankslip</name>
-	<description>API Restful for Bank Splip</description>
+	<description>API Restful for Bank Splips</description>
 	
 	<developers>
 		<developer>

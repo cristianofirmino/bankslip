@@ -1,4 +1,4 @@
-package com.bankslip.api.entity;
+package com.bankslips.api.entity;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -11,7 +11,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
-import com.bankslip.api.enums.StatusEnum;
+import com.bankslips.api.enums.StatusEnum;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -100,6 +100,7 @@ public class Bankslip extends AbstractEntity {
 		final Date current = new Date();
 		this.created = current;
 		this.updated = current;
+		this.status = StatusEnum.PENDING;
 	}
 
 }

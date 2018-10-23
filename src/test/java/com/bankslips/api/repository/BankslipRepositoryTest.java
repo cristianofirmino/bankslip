@@ -1,12 +1,9 @@
-package com.bankslip.api;
+package com.bankslips.api.repository;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -19,14 +16,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.bankslip.api.entity.Bankslip;
-import com.bankslip.api.enums.StatusEnum;
-import com.bankslip.api.repository.BanksplitRepository;
+import com.bankslips.api.entity.Bankslip;
+import com.bankslips.api.repository.BanksplitRepository;
+import com.bankslips.api.util.PopulateDatabaseUtility;
+
+/**
+ * Test Class BanslipRepository
+ * 
+ * @author Cristiano Firmino
+ *
+ */
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class BanslipRepositoryTest {
+public class BankslipRepositoryTest {
 
 	@Autowired
 	private BanksplitRepository banksplitRepository;
@@ -35,7 +39,8 @@ public class BanslipRepositoryTest {
 	public void setup() throws Exception {
 
 		IntStream.rangeClosed(1, 10).forEach(i -> {
-			this.banksplitRepository.save(getNewBankslip("Agent 00" + i));
+			this.banksplitRepository.save(
+					PopulateDatabaseUtility.newBankslip("Agent 00" + i));
 		});
 
 	}
@@ -69,29 +74,6 @@ public class BanslipRepositoryTest {
 		Bankslip bankslip = opBankslip.get();
 
 		assertEquals(id, bankslip.getId());
-	}
-
-	private Bankslip getNewBankslip(String customer) {
-		Bankslip bankslip = new Bankslip();
-		Date date = new Date();
-		bankslip.setCustomer(customer);
-		bankslip.setDueDate(getDueDate(date));
-		bankslip.setStatus(StatusEnum.PENDING);
-		bankslip.setTotalInCents(new BigDecimal(Math.random() * 1000));
-		return bankslip;
-	}
-
-	private Date getDueDate(Date date) {
-		Calendar c = Calendar.getInstance();
-		c.setTime(date);
-		c.add(Calendar.DATE, 10);
-		Date dueDate = c.getTime();
-
-		return dueDate;
-	}
-
-	public static void main(String[] args) {
-
 	}
 
 }

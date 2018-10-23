@@ -1,4 +1,4 @@
-package com.bankslip.api.service;
+package com.bankslips.api.service;
 
 import java.util.Optional;
 
@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bankslip.api.entity.Bankslip;
-import com.bankslip.api.repository.BanksplitRepository;
+import com.bankslips.api.entity.Bankslip;
+import com.bankslips.api.repository.BanksplitRepository;
 
 /**
  * Banskslip Service Class Implementation
@@ -17,9 +17,9 @@ import com.bankslip.api.repository.BanksplitRepository;
  *
  */
 @Service
-public class BankslipServiceImpl implements BankslipService {
+public class BankslipsServiceImpl implements BankslipsService {
 
-	private static final Logger log = LoggerFactory.getLogger(BankslipServiceImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(BankslipsServiceImpl.class);
 
 	@Autowired
 	private BanksplitRepository banksplitRepository;

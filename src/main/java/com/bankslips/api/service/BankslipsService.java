@@ -1,8 +1,8 @@
-package com.bankslip.api.service;
+package com.bankslips.api.service;
 
 import java.util.Optional;
 
-import com.bankslip.api.entity.Bankslip;
+import com.bankslips.api.entity.Bankslip;
 
 /**
  * Banskslip Service Interface
@@ -10,7 +10,7 @@ import com.bankslip.api.entity.Bankslip;
  * @author Cristiano Firmino
  *
  */
-public interface BankslipService {
+public interface BankslipsService {
 
 	/**
 	 * Persist a bankslip in database.

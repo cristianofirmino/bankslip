@@ -1,4 +1,4 @@
-package com.bankslip.api.entity;
+package com.bankslips.api.entity;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;

@@ -1,4 +1,6 @@
-package com.bankslip.api;
+package com.bankslips.api;
+
+import java.text.ParseException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,10 +11,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class BankslipApplicationTests {
+public class BankslipsApplicationTests {
 
 	@Test
 	public void contextLoads() {
+	}
+
+	public static void main(String[] args) throws ParseException {
 	}
 
 }

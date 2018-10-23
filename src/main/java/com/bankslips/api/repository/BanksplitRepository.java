@@ -1,11 +1,11 @@
-package com.bankslip.api.repository;
+package com.bankslips.api.repository;
 
 import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bankslip.api.entity.Bankslip;
+import com.bankslips.api.entity.Bankslip;
 
 public interface BanksplitRepository extends CrudRepository<Bankslip, String> {
 

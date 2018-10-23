@@ -1,12 +1,13 @@
-package com.bankslip.api;
+package com.bankslips.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BankslipApplication {
+public class BankslipsApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BankslipApplication.class, args);
+		SpringApplication.run(BankslipsApplication.class, args);
 	}
+
 }
