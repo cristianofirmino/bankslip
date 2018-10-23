@@ -11,9 +11,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Component
-public class BankslipDTO {
-
-	private Optional<String> id = Optional.empty();
+public class BankslipDTO extends DTO {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "America/Sao_Paulo")
 	private Date dueDate;
@@ -23,14 +21,6 @@ public class BankslipDTO {
 	private String customer;
 
 	private StatusEnum status;
-
-	public Optional<String> getId() {
-		return id;
-	}
-
-	public void setId(Optional<String> id) {
-		this.id = id;
-	}
 
 	@JsonProperty("due_date")
 	public Date getDueDate() {
@@ -68,7 +58,7 @@ public class BankslipDTO {
 
 	@Override
 	public String toString() {
-		return "BankslipDTO [id=" + id + ", dueDate=" + dueDate + ", totalInCents=" + totalInCents + ", customer="
+		return "BankslipDTO [Id=" + getId() + ", dueDate=" + dueDate + ", totalInCents=" + totalInCents + ", customer="
 				+ customer + ", status=" + status + "]";
 	}
 

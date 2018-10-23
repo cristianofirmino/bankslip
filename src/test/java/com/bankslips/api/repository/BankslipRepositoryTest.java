@@ -17,7 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.bankslips.api.entity.Bankslip;
-import com.bankslips.api.repository.BanksplitRepository;
+import com.bankslips.api.repository.Repository;
 import com.bankslips.api.util.PopulateDatabaseUtility;
 
 /**
@@ -33,7 +33,7 @@ import com.bankslips.api.util.PopulateDatabaseUtility;
 public class BankslipRepositoryTest {
 
 	@Autowired
-	private BanksplitRepository banksplitRepository;
+	private Repository banksplitRepository;
 
 	@Before
 	public void setup() throws Exception {

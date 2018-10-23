@@ -6,13 +6,15 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import com.bankslips.api.dto.BankslipDTO;
+import com.bankslips.api.dto.DTO;
 import com.bankslips.api.response.CustomResponse;
 
 @Component
-public class BanksplitCreateValidation implements CustomValidation {
+public class BanksplitValidator implements CustomValidator {
 
-	public CustomResponse<Object> validation(BankslipDTO bankslipDTO) {
+	public CustomResponse<Object> validateForCreation(DTO dto) {
 
+		BankslipDTO bankslipDTO = (BankslipDTO) dto;
 		CustomResponse<Object> response = new CustomResponse<>();
 		List<String> errors = new ArrayList<>();
 

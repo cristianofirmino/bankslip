@@ -1,10 +1,12 @@
 package com.bankslips.api.controller;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,9 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bankslips.api.dto.BankslipDTO;
+import com.bankslips.api.dto.DTO;
 import com.bankslips.api.response.CustomResponse;
-import com.bankslips.api.service.BankslipsService;
-import com.bankslips.api.validation.CustomValidation;
+import com.bankslips.api.service.IService;
+import com.bankslips.api.validation.CustomValidator;
 
 @RestController
 @RequestMapping("/rest/bankslips")
@@ -24,23 +27,32 @@ public class BankslipsController {
 	private static final Logger log = LoggerFactory.getLogger(BankslipsController.class);
 
 	@Autowired
-	private BankslipsService banksplitsService;
+	private IService service;
 
 	@Autowired
-	private CustomValidation createValidation;
+	private CustomValidator validator;
 
 	@PostMapping
-	public ResponseEntity<?> create(@RequestBody BankslipDTO bankslipDTO) {
+	public ResponseEntity<?> create(@RequestBody DTO dto) {
 
-		log.info("Creating a banksplit: {}", bankslipDTO.toString());
+		log.info("Creating a banksplit: {}", dto);
+		CustomResponse<Object> customResponse = validator.validateForCreation(dto);
 
-		CustomResponse<Object> response = createValidation.validation(bankslipDTO);
-		if (response.getErrors().size() > 0) {
-			log.error("Error creating a banksplit: {}", bankslipDTO.toString() + response.getErrors());
-			return ResponseEntity.unprocessableEntity().body(response);
+		if (customResponse.getErrors().size() > 0) {
+			log.error("Error creating a banksplit: {}", dto.toString() + customResponse.getErrors());
+			return ResponseEntity.unprocessableEntity().body(customResponse);
 		}
 
-		return ResponseEntity.ok(bankslipDTO);
+		Optional<DTO> oDTO = service.persist(dto);
+
+		if (oDTO.isPresent()) {
+			log.info("Banksplit created successfully.: {}", oDTO);
+			return new ResponseEntity<>(oDTO, HttpStatus.CREATED);
+		}
+
+		customResponse.setError("Could not validate the transaction");
+		log.error("Error creating a banksplit: {}", dto.toString() + customResponse.getErrors());
+		return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 

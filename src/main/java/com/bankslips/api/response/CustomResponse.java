@@ -41,4 +41,9 @@ public class CustomResponse<T> {
 	public void setErrors(List<String> errors) {
 		this.errors = errors;
 	}
+	
+	public void setError(String error) {
+		this.errors = new ArrayList<>();
+		this.errors.add(error);
+	}
 }

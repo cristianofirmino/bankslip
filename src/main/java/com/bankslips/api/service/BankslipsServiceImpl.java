@@ -7,8 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bankslips.api.entity.Bankslip;
-import com.bankslips.api.repository.BanksplitRepository;
+import com.bankslips.api.dto.DTO;
+import com.bankslips.api.entity.AbstractEntity;
+import com.bankslips.api.parse.ParseEntityDTO;
+import com.bankslips.api.repository.Repository;
 
 /**
  * Banskslip Service Class Implementation
@@ -17,29 +19,37 @@ import com.bankslips.api.repository.BanksplitRepository;
  *
  */
 @Service
-public class BankslipsServiceImpl implements BankslipsService {
+public class BankslipsServiceImpl implements IService {
 
 	private static final Logger log = LoggerFactory.getLogger(BankslipsServiceImpl.class);
 
 	@Autowired
-	private BanksplitRepository banksplitRepository;
+	private Repository repository;
+	
+	@Autowired
+	ParseEntityDTO parse;
 
 	@Override
-	public Optional<Bankslip> persist(Bankslip bankslip) {
-		log.info("Persisting a bankslip: {}", bankslip);
-		return Optional.ofNullable(this.banksplitRepository.save(bankslip));
+	public Optional<DTO> persist(DTO dto) {
+		log.info("Persisting a bankslip: {}", dto);
+		AbstractEntity toEntity = parse.parseDTOToEntity(dto);
+		AbstractEntity entity = this.repository.save(toEntity);
+		DTO toDTO = parse.parseEntityToDTO(entity);		
+		return Optional.ofNullable(toDTO);
 	}
 
 	@Override
-	public Optional<Bankslip> findById(String id) {
+	public Optional<DTO> findById(String id) {
 		log.info("Finding a bankslip by ID {}", id);
-		return this.banksplitRepository.findById(id);
+		Optional<AbstractEntity> entity = this.repository.findById(id);
+		DTO dto = parse.parseEntityToDTO(entity.get());
+		return Optional.ofNullable(dto);
 	}
 
 	@Override
 	public void delete(String id) {
 		log.info("Deleting a bankslip by ID {}", id);
-		this.banksplitRepository.deleteById(id);
+		this.repository.deleteById(id);
 
 	}
 
