@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import com.bankslips.api.dto.BankslipDTO;
 import com.bankslips.api.dto.DTO;
 import com.bankslips.api.entity.AbstractEntity;
-import com.bankslips.api.entity.Bankslip;
+import com.bankslips.api.entity.BankslipEntity;
 
 @Component
 public class ParseBankspliEntityDTO implements ParseEntityDTO {
@@ -15,7 +15,7 @@ public class ParseBankspliEntityDTO implements ParseEntityDTO {
 	@Override
 	public BankslipDTO parseEntityToDTO(AbstractEntity entity) {
 
-		Bankslip bankslip = (Bankslip) entity;
+		BankslipEntity bankslip = (BankslipEntity) entity;
 		BankslipDTO dto = new BankslipDTO();
 
 		dto.setId(Optional.of(bankslip.getId()));
@@ -28,10 +28,10 @@ public class ParseBankspliEntityDTO implements ParseEntityDTO {
 	}
 
 	@Override
-	public Bankslip parseDTOToEntity(DTO dto) {
+	public BankslipEntity parseDTOToEntity(DTO dto) {
 
 		BankslipDTO bankslipDTO = (BankslipDTO) dto;
-		Bankslip entity = new Bankslip();
+		BankslipEntity entity = new BankslipEntity();
 
 		entity.setCustomer(bankslipDTO.getCustomer());
 		entity.setDueDate(bankslipDTO.getDueDate());

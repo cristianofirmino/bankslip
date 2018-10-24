@@ -16,8 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.bankslips.api.entity.Bankslip;
-import com.bankslips.api.repository.Repository;
+import com.bankslips.api.entity.BankslipEntity;
 import com.bankslips.api.util.PopulateDatabaseUtility;
 
 /**
@@ -33,26 +32,25 @@ import com.bankslips.api.util.PopulateDatabaseUtility;
 public class BankslipRepositoryTest {
 
 	@Autowired
-	private Repository banksplitRepository;
+	private BankslipstRepository repository;
 
 	@Before
 	public void setup() throws Exception {
 
 		IntStream.rangeClosed(1, 10).forEach(i -> {
-			this.banksplitRepository.save(
-					PopulateDatabaseUtility.newBankslip("Agent 00" + i));
+			this.repository.save(PopulateDatabaseUtility.newBankslip("Agent 00" + i));
 		});
 
 	}
 
 	@After
 	public final void tearDown() {
-		this.banksplitRepository.deleteAll();
+		this.repository.deleteAll();
 	}
 
 	@Test
 	public void testGetAllBanksplits() {
-		Iterable<Bankslip> allBanksplits = this.banksplitRepository.findAll();
+		Iterable<BankslipEntity> allBanksplits = this.repository.findAll();
 		assertNotNull(allBanksplits);
 		assertEquals(10, allBanksplits.spliterator().getExactSizeIfKnown());
 	}
@@ -60,18 +58,18 @@ public class BankslipRepositoryTest {
 	@Test
 	public void testFindByCustomer() {
 		String customer = "Agent 007";
-		Optional<Bankslip> opBankslip = this.banksplitRepository.findByCustomer(customer);
+		Optional<BankslipEntity> opBankslip = this.repository.findByCustomer(customer);
 
 		assertTrue(opBankslip.isPresent());
-		assertTrue(opBankslip.get() instanceof Bankslip);
+		assertTrue(opBankslip.get() instanceof BankslipEntity);
 		assertEquals(customer, opBankslip.get().getCustomer());
 	}
 
 	@Test
 	public void testFindById() {
-		String id = this.banksplitRepository.findByCustomer("Agent 007").get().getId();
-		Optional<Bankslip> opBankslip = this.banksplitRepository.findById(id);
-		Bankslip bankslip = opBankslip.get();
+		String id = this.repository.findByCustomer("Agent 007").get().getId();
+		Optional<BankslipEntity> opBankslip = this.repository.findById(id);
+		BankslipEntity bankslip = (BankslipEntity) opBankslip.get();
 
 		assertEquals(id, bankslip.getId());
 	}

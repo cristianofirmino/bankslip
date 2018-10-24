@@ -26,7 +26,7 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @Entity
 @Table(name = "bankslips")
-public class Bankslip extends AbstractEntity {
+public class BankslipEntity extends AbstractEntity {
 
 	private Date dueDate;
 	private Date created;
@@ -34,6 +34,7 @@ public class Bankslip extends AbstractEntity {
 	private BigDecimal totalInCents;
 	private String customer;
 	private StatusEnum status;
+	private Date paymentDate;
 
 	@Column(name = "due_date", nullable = false)
 	public Date getDueDate() {
@@ -88,6 +89,15 @@ public class Bankslip extends AbstractEntity {
 
 	public void setStatus(StatusEnum status) {
 		this.status = status;
+	}
+
+	@Column(name = "payment_date", nullable = true)
+	public Date getPaymentDate() {
+		return paymentDate;
+	}
+
+	public void setPaymentDate(Date paymentDate) {
+		this.paymentDate = paymentDate;
 	}
 
 	@PreUpdate

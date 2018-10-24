@@ -2,25 +2,30 @@ package com.bankslips.api.dto;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
 import com.bankslips.api.enums.StatusEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 @Component
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@NoArgsConstructor
+@ToString(callSuper = true)
 public class BankslipDTO extends DTO {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "America/Sao_Paulo")
 	private Date dueDate;
-
 	private BigDecimal totalInCents;
-
 	private String customer;
-
 	private StatusEnum status;
+	private BigDecimal fine;
+	private Date paymentDate;
 
 	@JsonProperty("due_date")
 	public Date getDueDate() {
@@ -56,10 +61,21 @@ public class BankslipDTO extends DTO {
 		this.status = status;
 	}
 
-	@Override
-	public String toString() {
-		return "BankslipDTO [Id=" + getId() + ", dueDate=" + dueDate + ", totalInCents=" + totalInCents + ", customer="
-				+ customer + ", status=" + status + "]";
+	public BigDecimal getFine() {
+		return fine;
+	}
+
+	public void setFine(BigDecimal fine) {
+		this.fine = fine;
+	}
+
+	@JsonProperty("payment_date")
+	public Date getPaymentDate() {
+		return paymentDate;
+	}
+
+	public void setPaymentDate(Date paymentDate) {
+		this.paymentDate = paymentDate;
 	}
 
 }

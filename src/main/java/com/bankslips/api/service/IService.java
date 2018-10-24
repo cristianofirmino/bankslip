@@ -1,5 +1,6 @@
 package com.bankslips.api.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.bankslips.api.dto.DTO;
@@ -27,6 +28,13 @@ public interface IService {
 	 * @return Optional<Bankslip>
 	 */
 	Optional<DTO> findById(String id);
+
+	/**
+	 * Search all entities in database.
+	 * 
+	 * @return List<DTO>
+	 */
+	List<DTO> findAll();
 
 	/**
 	 * Delete a entity given an id.

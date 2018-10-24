@@ -2,15 +2,13 @@ package com.bankslips.api.dto;
 
 import java.util.Optional;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
 public abstract class DTO {
 
 	private Optional<String> id = Optional.empty();
-
-	public Optional<String> getId() {
-		return id;
-	}
-
-	public void setId(Optional<String> id) {
-		this.id = id;
-	}
+	
 }
