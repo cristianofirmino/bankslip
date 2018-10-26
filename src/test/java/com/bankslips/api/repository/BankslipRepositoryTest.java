@@ -1,6 +1,7 @@
 package com.bankslips.api.repository;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -17,7 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.bankslips.api.entity.BankslipEntity;
-import com.bankslips.api.util.PopulateDatabaseUtility;
+import com.bankslips.api.util.DatabaseMockUtility;
 
 /**
  * Test Class BanslipRepository
@@ -34,11 +35,17 @@ public class BankslipRepositoryTest {
 	@Autowired
 	private BankslipstRepository repository;
 
+	private int size;
+	private String customer;
+
 	@Before
 	public void setup() throws Exception {
 
-		IntStream.rangeClosed(1, 10).forEach(i -> {
-			this.repository.save(PopulateDatabaseUtility.newBankslip("Agent 00" + i));
+		size = 10;
+		customer = "BankslipstRepository";
+
+		IntStream.rangeClosed(1, size).forEach(i -> {
+			this.repository.save(DatabaseMockUtility.newBankslip(customer + i, i));
 		});
 
 	}
@@ -52,26 +59,35 @@ public class BankslipRepositoryTest {
 	public void testGetAllBanksplits() {
 		Iterable<BankslipEntity> allBanksplits = this.repository.findAll();
 		assertNotNull(allBanksplits);
-		assertEquals(10, allBanksplits.spliterator().getExactSizeIfKnown());
+		assertTrue(allBanksplits.spliterator().getExactSizeIfKnown() > 0);
+		assertEquals(size, allBanksplits.spliterator().getExactSizeIfKnown());
 	}
 
 	@Test
 	public void testFindByCustomer() {
-		String customer = "Agent 007";
-		Optional<BankslipEntity> opBankslip = this.repository.findByCustomer(customer);
+		Optional<BankslipEntity> opBankslip = this.repository.findByCustomer(customer + 7);
 
 		assertTrue(opBankslip.isPresent());
 		assertTrue(opBankslip.get() instanceof BankslipEntity);
-		assertEquals(customer, opBankslip.get().getCustomer());
+		assertEquals(customer + 7, opBankslip.get().getCustomer());
 	}
 
 	@Test
 	public void testFindById() {
-		String id = this.repository.findByCustomer("Agent 007").get().getId();
+		String id = this.repository.findByCustomer(customer + 7).get().getId();
 		Optional<BankslipEntity> opBankslip = this.repository.findById(id);
 		BankslipEntity bankslip = (BankslipEntity) opBankslip.get();
 
 		assertEquals(id, bankslip.getId());
+	}
+
+	@Test
+	public void testDeleteById() {
+		String id = this.repository.findByCustomer(customer + 7).get().getId();
+		this.repository.deleteById(id);
+		Optional<BankslipEntity> entity = this.repository.findById(id);
+
+		assertFalse(entity.isPresent());
 	}
 
 }

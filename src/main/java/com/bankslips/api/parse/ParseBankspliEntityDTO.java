@@ -13,8 +13,7 @@ import com.bankslips.api.entity.BankslipEntity;
 public class ParseBankspliEntityDTO implements ParseEntityDTO {
 
 	@Override
-	public BankslipDTO parseEntityToDTO(AbstractEntity entity) {
-
+	public BankslipDTO parseEntityToDTOToShow(AbstractEntity entity) {
 		BankslipEntity bankslip = (BankslipEntity) entity;
 		BankslipDTO dto = new BankslipDTO();
 
@@ -26,16 +25,37 @@ public class ParseBankspliEntityDTO implements ParseEntityDTO {
 
 		return dto;
 	}
+	
+	@Override
+	public BankslipDTO parseEntityToDTOToPersist(AbstractEntity entity) {
+		BankslipEntity bankslip = (BankslipEntity) entity;
+		BankslipDTO dto = new BankslipDTO();
+		
+		dto.setCustomer(bankslip.getCustomer());
+		dto.setStatus(bankslip.getStatus());
+		dto.setDueDate(bankslip.getDueDate());
+		dto.setTotalInCents(bankslip.getTotalInCents());
+
+		return dto;
+	}
 
 	@Override
-	public BankslipEntity parseDTOToEntity(DTO dto) {
-
+	public BankslipEntity parseDTOToEntityToPersist(DTO dto) {
 		BankslipDTO bankslipDTO = (BankslipDTO) dto;
 		BankslipEntity entity = new BankslipEntity();
 
 		entity.setCustomer(bankslipDTO.getCustomer());
 		entity.setDueDate(bankslipDTO.getDueDate());
 		entity.setTotalInCents(bankslipDTO.getTotalInCents());
+
+		return entity;
+	}
+
+	@Override
+	public AbstractEntity parseDTOToEntityWithPayToPersist(DTO dto) {
+		BankslipEntity entity = this.parseDTOToEntityToPersist(dto);
+		entity.setPaymentDate(((BankslipDTO) dto).getPaymentDate());
+		entity.setId(((BankslipDTO) dto).getId().get());
 
 		return entity;
 	}

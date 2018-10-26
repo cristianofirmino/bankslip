@@ -1,5 +1,6 @@
 package com.bankslips.api.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,15 +18,24 @@ public interface IService {
 	 * Persist a entity in database.
 	 * 
 	 * @param DTO
-	 * @return DTO
+	 * @return Optional<DTO>
 	 */
 	Optional<DTO> persist(DTO dto);
+
+	/**
+	 * Update payment date of the entity in database.
+	 * 
+	 * @param optionalDTO
+	 * @param date
+	 * @return boolean
+	 */
+	boolean pay(Optional<DTO> optionalDTO, Date date);
 
 	/**
 	 * Find and returns a entity given an id.
 	 * 
 	 * @param id
-	 * @return Optional<Bankslip>
+	 * @return Optional<DTO>
 	 */
 	Optional<DTO> findById(String id);
 
@@ -37,11 +47,11 @@ public interface IService {
 	List<DTO> findAll();
 
 	/**
-	 * Delete a entity given an id.
+	 * Change status to cancel of the entity given an id.
 	 * 
 	 * @param id
-	 * @return
+	 * @return boolean
 	 */
-	void delete(String id);
+	boolean cancel(String id);
 
 }

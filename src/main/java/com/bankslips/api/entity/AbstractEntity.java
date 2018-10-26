@@ -1,10 +1,15 @@
 package com.bankslips.api.entity;
 
+import java.util.Date;
+
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,20 +19,23 @@ import lombok.NoArgsConstructor;
  * 
  * @author Cristiano Firmino
  *
- * @param <ID>
  */
 @Data
 @NoArgsConstructor
 @MappedSuperclass
 public abstract class AbstractEntity {
 
-	/**
-	 * Identification attribute
-	 */
-	/*@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)*/
 	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	private String id;
+
+	@Column(name = "created", nullable = false, updatable = false)
+	@CreationTimestamp
+	private Date created;
+
+	@Column(name = "updated", nullable = false)
+	@UpdateTimestamp
+	private Date updated;
+
 }

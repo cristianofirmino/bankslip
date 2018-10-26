@@ -10,72 +10,32 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+@NoArgsConstructor
 @Component
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-@NoArgsConstructor
-@ToString(callSuper = true)
 public class BankslipDTO extends DTO {
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "America/Sao_Paulo")
-	private Date dueDate;
-	private BigDecimal totalInCents;
 	private String customer;
 	private StatusEnum status;
 	private BigDecimal fine;
-	private Date paymentDate;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "America/Sao_Paulo")
 	@JsonProperty("due_date")
-	public Date getDueDate() {
-		return this.dueDate;
-	}
-
-	public void setDueDate(Date dueDate) {
-		this.dueDate = dueDate;
-	}
+	private Date dueDate;
 
 	@JsonProperty("total_in_cents")
-	public BigDecimal getTotalInCents() {
-		return totalInCents;
-	}
+	private BigDecimal totalInCents;
 
-	public void setTotalInCents(BigDecimal totalInCents) {
-		this.totalInCents = totalInCents;
-	}
-
-	public String getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(String customer) {
-		this.customer = customer;
-	}
-
-	public StatusEnum getStatus() {
-		return status;
-	}
-
-	public void setStatus(StatusEnum status) {
-		this.status = status;
-	}
-
-	public BigDecimal getFine() {
-		return fine;
-	}
-
-	public void setFine(BigDecimal fine) {
-		this.fine = fine;
-	}
-
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "America/Sao_Paulo")
 	@JsonProperty("payment_date")
-	public Date getPaymentDate() {
-		return paymentDate;
-	}
-
-	public void setPaymentDate(Date paymentDate) {
-		this.paymentDate = paymentDate;
-	}
+	private Date paymentDate;
 
 }
