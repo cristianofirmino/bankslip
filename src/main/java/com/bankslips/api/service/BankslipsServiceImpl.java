@@ -1,7 +1,6 @@
 package com.bankslips.api.service;
 
 import java.math.BigDecimal;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,6 +18,7 @@ import com.bankslips.api.entity.BankslipEntity;
 import com.bankslips.api.enums.StatusEnum;
 import com.bankslips.api.parse.ParseEntityDTO;
 import com.bankslips.api.repository.BankslipstRepository;
+import com.bankslips.api.util.CalcsUtil;
 
 /**
  * Banskslip Service Class Implementation
@@ -52,6 +52,7 @@ public class BankslipsServiceImpl implements IService {
 		Optional<BankslipEntity> entity = this.repository.findById(id);
 
 		if (!entity.isPresent()) {
+			log.info("Bankslip ID not found {}", id);
 			return Optional.empty();
 		}
 
@@ -93,7 +94,6 @@ public class BankslipsServiceImpl implements IService {
 
 	@Override
 	public boolean pay(Optional<DTO> optionalDTO, Date date) {
-
 		BankslipDTO bankslipDTO = (BankslipDTO) optionalDTO.get();
 		bankslipDTO.setPaymentDate(date);
 		BankslipEntity entity = (BankslipEntity) this.parse.parseDTOToEntityWithPayToPersist(bankslipDTO);
@@ -104,24 +104,13 @@ public class BankslipsServiceImpl implements IService {
 	}
 
 	private Optional<DTO> calcFine(DTO dto) {
+		BankslipDTO bankslipDTO = (BankslipDTO) dto;
+		Optional<BigDecimal> fine = CalcsUtil.calcFine(bankslipDTO.getDueDate(), bankslipDTO.getTotalInCents());
 
-		Date today = new Date();
-		Date dueDate = ((BankslipDTO) dto).getDueDate();
-		long days = ChronoUnit.DAYS.between(dueDate.toInstant(), today.toInstant());
+		if (fine.isPresent())
+			bankslipDTO.setFine(fine.get());
 
-		if (days > 10) {
-			BigDecimal totalInCents = ((BankslipDTO) dto).getTotalInCents();
-			BigDecimal fine = (totalInCents.multiply(BigDecimal.valueOf(0.01))).multiply(BigDecimal.valueOf(days));
-			((BankslipDTO) dto).setFine(fine);
-		}
-
-		if (days > 0 && days <= 10) {
-			BigDecimal totalInCents = ((BankslipDTO) dto).getTotalInCents();
-			BigDecimal fine = (totalInCents.multiply(BigDecimal.valueOf(0.005))).multiply(BigDecimal.valueOf(days));
-			((BankslipDTO) dto).setFine(fine);
-		}
-
-		return Optional.ofNullable(dto);
+		return Optional.ofNullable(bankslipDTO);
 	}
 
 }
