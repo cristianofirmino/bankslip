@@ -5,13 +5,32 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
 
-public class CalcsUtil {
+import com.bankslips.api.dto.BankslipDTO;
+import com.bankslips.api.dto.DTO;
 
-	public static Optional<BigDecimal> calcFine(Date dueDate, BigDecimal totalInCents) {
+/**
+ * Utility Class for Calculations
+ * 
+ * @author Cristiano Firmino
+ *
+ */
+public final class CalcsUtil {
 
+	/**
+	 * Calculates the fine of a bankslip
+	 * 
+	 * @param DTO
+	 * @return DTO
+	 */
+	public static DTO calcFine(DTO dto) {
+
+		BankslipDTO bankslipDTO = (BankslipDTO) dto;
 		BigDecimal fine = null;
-		Date today = new Date();
-		long days = ChronoUnit.DAYS.between(dueDate.toInstant(), today.toInstant());
+		BigDecimal totalInCents = bankslipDTO.getTotalInCents();
+		Date dueDate = bankslipDTO.getDueDate();
+		Date paymentDate = Optional.ofNullable(bankslipDTO.getPaymentDate()).isPresent() ? bankslipDTO.getPaymentDate()
+				: new Date();
+		long days = ChronoUnit.DAYS.between(dueDate.toInstant(), paymentDate.toInstant());
 
 		if (days > 10) {
 			fine = (totalInCents.multiply(BigDecimal.valueOf(0.01))).multiply(BigDecimal.valueOf(days));
@@ -21,6 +40,8 @@ public class CalcsUtil {
 			fine = (totalInCents.multiply(BigDecimal.valueOf(0.005))).multiply(BigDecimal.valueOf(days));
 		}
 
-		return Optional.ofNullable(fine);
+		bankslipDTO.setFine(fine);
+
+		return bankslipDTO;
 	}
 }

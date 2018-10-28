@@ -1,6 +1,5 @@
 package com.bankslips.api.service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,11 +57,11 @@ public class BankslipsServiceImpl implements IService {
 
 		DTO dto = this.parse.parseEntityToDTOToShow(entity.get());
 
-		if (entity.get().getStatus().toString() != StatusEnum.PENDING.toString()) {
+		if (entity.get().getStatus() == StatusEnum.CANCELED) {
 			return Optional.ofNullable(dto);
 		}
 
-		return calcFine(dto);
+		return Optional.ofNullable(CalcsUtil.calcFine(dto));
 	}
 
 	@Override
@@ -86,7 +85,12 @@ public class BankslipsServiceImpl implements IService {
 		List<DTO> allDTOs = new ArrayList<>();
 
 		this.repository.findAll().forEach(entity -> {
-			allDTOs.add(this.parse.parseEntityToDTOToShow(entity));
+			DTO dto = this.parse.parseEntityToDTOToShow(entity);
+			if (entity.getStatus() == StatusEnum.CANCELED) {
+				allDTOs.add(dto);
+			} else {
+				allDTOs.add(CalcsUtil.calcFine(dto));
+			}
 		});
 
 		return allDTOs;
@@ -101,16 +105,6 @@ public class BankslipsServiceImpl implements IService {
 		Optional<BankslipEntity> entitySaved = Optional.ofNullable(this.repository.save(entity));
 
 		return entitySaved.isPresent();
-	}
-
-	private Optional<DTO> calcFine(DTO dto) {
-		BankslipDTO bankslipDTO = (BankslipDTO) dto;
-		Optional<BigDecimal> fine = CalcsUtil.calcFine(bankslipDTO.getDueDate(), bankslipDTO.getTotalInCents());
-
-		if (fine.isPresent())
-			bankslipDTO.setFine(fine.get());
-
-		return Optional.ofNullable(bankslipDTO);
 	}
 
 }

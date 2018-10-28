@@ -23,6 +23,8 @@ import com.bankslips.api.response.CustomResponse;
 import com.bankslips.api.service.IService;
 import com.bankslips.api.validation.CustomValidator;
 
+import io.swagger.annotations.ApiOperation;
+
 /**
  * RestController Class of Bankslips API
  * 
@@ -45,6 +47,7 @@ public class BankslipsController {
 	@Autowired
 	CustomResponse<Object> customResponse;
 
+	@ApiOperation(value = "Create a bankslip", response = BankslipDTO.class)
 	@PostMapping
 	public ResponseEntity<?> create(@RequestBody BankslipDTO bankslipDTO) {
 
@@ -57,18 +60,11 @@ public class BankslipsController {
 		}
 
 		Optional<DTO> dto = service.persist(bankslipDTO);
-
-		if (dto.isPresent()) {
-			log.info("Banksplit created successfully.: {}", dto);
-			return new ResponseEntity<>(dto, HttpStatus.CREATED);
-		}
-
-		customResponse.setError("Could not validate the transaction");
-		log.error("Error creating a banksplit: {}", bankslipDTO.toString() + customResponse.getErrors());
-		return new ResponseEntity<>(customResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-
+		log.info("Banksplit created successfully.: {}", dto);
+		return new ResponseEntity<>(dto, HttpStatus.CREATED);
 	}
 
+	@ApiOperation(value="List all bankslips", response = BankslipDTO[].class)
 	@GetMapping
 	public ResponseEntity<?> listAll() {
 
@@ -82,6 +78,7 @@ public class BankslipsController {
 		return new ResponseEntity<>(all, HttpStatus.OK);
 	}
 
+	@ApiOperation(value = "Find a bankslip by ID", response = BankslipDTO.class)
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<?> findById(@PathVariable("id") String id) {
 
@@ -96,6 +93,7 @@ public class BankslipsController {
 		return ResponseEntity.ok(dto);
 	}
 
+	@ApiOperation(value = "Make the payment a bankslip by ID")
 	@PostMapping(value = "/{id}/payments")
 	public ResponseEntity<?> payment(@PathVariable("id") String id, @RequestBody BankslipDTO bankslipDTO) {
 
@@ -119,6 +117,7 @@ public class BankslipsController {
 		return ResponseEntity.noContent().build();
 	}
 
+	@ApiOperation("Cancel a bankslip by ID")
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> cancel(@PathVariable("id") String id) {
 

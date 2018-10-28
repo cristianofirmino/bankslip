@@ -9,8 +9,13 @@ import com.bankslips.api.dto.DTO;
 import com.bankslips.api.entity.AbstractEntity;
 import com.bankslips.api.entity.BankslipEntity;
 
+/**
+ * Implementation Class for parse banksplip entity DTO
+ * @author Cristiano Firmino
+ *
+ */
 @Component
-public class ParseBankspliEntityDTO implements ParseEntityDTO {
+public class ParseBanksplipEntityDTO implements ParseEntityDTO {
 
 	@Override
 	public BankslipDTO parseEntityToDTOToShow(AbstractEntity entity) {
@@ -22,6 +27,10 @@ public class ParseBankspliEntityDTO implements ParseEntityDTO {
 		dto.setStatus(bankslip.getStatus());
 		dto.setDueDate(bankslip.getDueDate());
 		dto.setTotalInCents(bankslip.getTotalInCents());
+		
+		if(Optional.ofNullable(bankslip.getPaymentDate()).isPresent()) {
+			dto.setPaymentDate(bankslip.getPaymentDate());
+		}
 
 		return dto;
 	}

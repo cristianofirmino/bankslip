@@ -7,6 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import com.bankslips.api.entity.BankslipEntity;
 
+/**
+ * Extended Interface for BankslipEntity
+ * @author Cristiano Firmino
+ *
+ */
 @Repository
 public interface BankslipstRepository extends CrudRepository<BankslipEntity, String> {
 

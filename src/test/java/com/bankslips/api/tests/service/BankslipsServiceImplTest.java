@@ -1,4 +1,4 @@
-package com.bankslips.api.service;
+package com.bankslips.api.tests.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -24,16 +24,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.bankslips.api.BankslipsApplication;
 import com.bankslips.api.dto.BankslipDTO;
 import com.bankslips.api.dto.DTO;
 import com.bankslips.api.entity.BankslipEntity;
 import com.bankslips.api.enums.StatusEnum;
-import com.bankslips.api.parse.ParseBankspliEntityDTO;
+import com.bankslips.api.parse.ParseBanksplipEntityDTO;
 import com.bankslips.api.repository.BankslipstRepository;
+import com.bankslips.api.service.BankslipsServiceImpl;
+import com.bankslips.api.tests.util.DataTestUtil;
+import com.bankslips.api.tests.util.DatabaseMockUtility;
+import com.bankslips.api.tests.util.DatesUtil;
 import com.bankslips.api.util.CalcsUtil;
-import com.bankslips.api.util.DataTestUtil;
-import com.bankslips.api.util.DatabaseMockUtility;
-import com.bankslips.api.util.DatesUtil;
 
 /**
  * Test Class BankslipsServiceImpl
@@ -43,7 +45,7 @@ import com.bankslips.api.util.DatesUtil;
  */
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = BankslipsApplication.class)
 @ActiveProfiles("test")
 public class BankslipsServiceImplTest {
 
@@ -56,7 +58,7 @@ public class BankslipsServiceImplTest {
 	private BankslipsServiceImpl service;
 
 	@Autowired
-	ParseBankspliEntityDTO parse;
+	ParseBanksplipEntityDTO parse;
 
 	private int size;
 	private int daysAgo;
@@ -93,7 +95,7 @@ public class BankslipsServiceImplTest {
 	}
 
 	@Test
-	public void testPersistDTOIsPresent() {
+	public void test_Persist_DTO_Is_Present() {
 		DTO dto = DatabaseMockUtility.getOneDTO(date, customer, totalInCents);
 		Optional<DTO> dtoPersisted = DataTestUtil.getOptionalDTO(service, dto);
 		Optional<BankslipEntity> entityPersisted = DataTestUtil.getOptionalBankslipEntity(dtoPersisted, repository);
@@ -104,7 +106,7 @@ public class BankslipsServiceImplTest {
 	}
 
 	@Test
-	public void testDTOPersistedHasStatusPending() {
+	public void test_DTO_Persisted_Has_Status_Pending() {
 		DTO dto = DatabaseMockUtility.getOneDTO(date, customer, totalInCents);
 		Optional<DTO> dtoPersisted = DataTestUtil.getOptionalDTO(service, dto);
 		Optional<BankslipEntity> entityPersisted = DataTestUtil.getOptionalBankslipEntity(dtoPersisted, repository);
@@ -115,7 +117,7 @@ public class BankslipsServiceImplTest {
 	}
 
 	@Test
-	public void testeIfPersistedEntityHasCreationAndUpdateDate() {
+	public void teste_If_Persisted_Entity_Has_Creation_And_Update_Dates() {
 		DTO dto = DatabaseMockUtility.getOneDTO(date, customer, totalInCents);
 		Optional<DTO> dtoPersisted = DataTestUtil.getOptionalDTO(service, dto);
 		Optional<BankslipEntity> entityPersisted = DataTestUtil.getOptionalBankslipEntity(dtoPersisted, repository);
@@ -125,7 +127,7 @@ public class BankslipsServiceImplTest {
 	}
 
 	@Test
-	public void testIfSomeAttributesOfDTOAndPersistedEntityAreEquals() {
+	public void test_If_Some_Attributes_Of_DTO_And_Persisted_Entity_Are_Equals() {
 		DTO dto = DatabaseMockUtility.getOneDTO(date, customer, totalInCents);
 		Optional<DTO> dtoPersisted = DataTestUtil.getOptionalDTO(service, dto);
 		Optional<BankslipEntity> entityPersisted = DataTestUtil.getOptionalBankslipEntity(dtoPersisted, repository);
@@ -137,7 +139,7 @@ public class BankslipsServiceImplTest {
 	}
 
 	@Test
-	public void testAPersistedDTOAndPersistedEntityAreaEquals() {
+	public void test_A_Persisted_DTO_And_Persisted_Entity_Area_Equals() {
 		DTO dto = DatabaseMockUtility.getOneDTO(date, customer, totalInCents);
 		Optional<DTO> dtoPersisted = DataTestUtil.getOptionalDTO(service, dto);
 		Optional<BankslipEntity> entityPersisted = DataTestUtil.getOptionalBankslipEntity(dtoPersisted, repository);
@@ -151,7 +153,7 @@ public class BankslipsServiceImplTest {
 	}
 
 	@Test
-	public void testSomeAttributesOfADTOAndPersistedDTOAreEquals() {
+	public void test_Some_Attributes_Of_A_DTO_And_Persisted_DTO_Are_Equals() {
 		DTO dto = DatabaseMockUtility.getOneDTO(date, customer, totalInCents);
 		Optional<DTO> dtoPersisted = DataTestUtil.getOptionalDTO(service, dto);
 		BankslipDTO bankslipDTO = DataTestUtil.getBankslipDTO(dto);
@@ -163,7 +165,7 @@ public class BankslipsServiceImplTest {
 	}
 
 	@Test
-	public void testDTOFoundDueGreater10DaysIsPresent() {
+	public void test_DTO_Found_Due_Greater_10_Days_Is_Present() {
 		String id = getIdFindCustomer(daysAgo);
 		Optional<DTO> dtoFoundDueGreater10Days = DataTestUtil.getDTOById(service, id);
 
@@ -172,22 +174,18 @@ public class BankslipsServiceImplTest {
 	}
 
 	@Test
-	public void testFineOfBankslipDueGreaterThan10DaysIsCorrect() {
+	public void test_fine_of_bankslip_due_greater_than_10_days_is_correct() {
 		String id = getIdFindCustomer(daysAgo);
 		Optional<DTO> dtoFoundDueGreater10Days = DataTestUtil.getDTOById(service, id);
-		BankslipDTO dtoDueGreater10Days = (BankslipDTO) dtoFoundDueGreater10Days.get();
-		Optional<BigDecimal> fine = CalcsUtil.calcFine(dtoDueGreater10Days.getDueDate(),
-				dtoDueGreater10Days.getTotalInCents());
+		BankslipDTO dtoDueGreater10Days = (BankslipDTO) CalcsUtil.calcFine(dtoFoundDueGreater10Days.get());
 
-		assertEquals(dtoDueGreater10Days.getFine(), fine.get());
 		assertTrue(dtoDueGreater10Days.getFine().doubleValue() > 0);
-
-		log.info("DTO Fine Greater 10 Days: " + dtoDueGreater10Days);
-		log.info("Fine Greater 10 Days: " + fine.get());
+		assertTrue(((BankslipDTO) dtoFoundDueGreater10Days.get()).getFine().doubleValue() > 0);
+		assertEquals(((BankslipDTO) dtoFoundDueGreater10Days.get()).getFine(), dtoDueGreater10Days.getFine());
 	}
 
 	@Test
-	public void testDTOFoundDueLess10DaysIsPresent() {
+	public void test_DTO_Found_Due_Less_10_Days_Is_Present() {
 		String id = getIdFindCustomer(daysAgo + 1);
 		Optional<DTO> dtoFoundDueLess10Days = DataTestUtil.getDTOById(service, id);
 
@@ -196,45 +194,41 @@ public class BankslipsServiceImplTest {
 	}
 
 	@Test
-	public void testFineOfBankslipDueLess10DaysIsCorrect() {
+	public void test_fine_of_bankslip_due_less_10_days_is_correct() {
 		String id = getIdFindCustomer(daysAgo + 1);
 		Optional<DTO> dtoFoundDueLess10Days = DataTestUtil.getDTOById(service, id);
-		BankslipDTO dtoDueLess10Days = DataTestUtil.getBankSlipDTO(dtoFoundDueLess10Days);
-		Optional<BigDecimal> fineLess = CalcsUtil.calcFine(dtoDueLess10Days.getDueDate(),
-				dtoDueLess10Days.getTotalInCents());
+		BankslipDTO dtoDueLess10Days = (BankslipDTO) CalcsUtil.calcFine(dtoFoundDueLess10Days.get());
 
-		assertEquals(dtoDueLess10Days.getFine(), fineLess.get());
+		assertTrue(((BankslipDTO) dtoFoundDueLess10Days.get()).getFine().doubleValue() > 0);
 		assertTrue(dtoDueLess10Days.getFine().doubleValue() > 0);
-
-		log.info("DTO Fine Less 10 Days: " + dtoDueLess10Days);
-		log.info("Fine Less 10 Days: " + fineLess.get());
+		assertEquals(((BankslipDTO) dtoFoundDueLess10Days.get()).getFine() , dtoDueLess10Days.getFine());
 	}
 
 	@Test
-	public void testDueDateAndDaysAgoGreaterAreEquals() {
+	public void test_Due_Date_And_Days_Ago_Greater_Are_Equals() {
 		String id = getIdFindCustomer(daysAgo);
 		Optional<DTO> dtoFoundDueGreater10Days = DataTestUtil.getDTOById(service, id);
 		BankslipDTO dtoDueGreater10Days = DataTestUtil.getBankSlipDTO(dtoFoundDueGreater10Days);
 
-		String daysAgoDateGreater = DatesUtil.simpleFormaDate(DatesUtil.plusDays(this.date, daysAgo));
-		String dueDateGreater = DatesUtil.simpleFormaDate(dtoDueGreater10Days.getDueDate());
+		String daysAgoDateGreater = DatesUtil.simpleDate(DatesUtil.plusDays(this.date, daysAgo));
+		String dueDateGreater = DatesUtil.simpleDate(dtoDueGreater10Days.getDueDate());
 		assertEquals(daysAgoDateGreater, dueDateGreater);
 	}
 
 	@Test
-	public void testDueDateAndDaysAgoLessAreEquals() {
+	public void test_Due_Date_And_Days_Ago_Less_Are_Equals() {
 		String id = getIdFindCustomer(daysAgo + 1);
 		Optional<DTO> dtoFoundDueLess10Days = DataTestUtil.getDTOById(service, id);
 		BankslipDTO dtoDueLess10Days = DataTestUtil.getBankSlipDTO(dtoFoundDueLess10Days);
-		String daysAgoDateLess = DatesUtil.simpleFormaDate(DatesUtil.plusDays(this.date, (daysAgo + 1)));
-		String dueDateLess = DatesUtil.simpleFormaDate(dtoDueLess10Days.getDueDate());
+		String daysAgoDateLess = DatesUtil.simpleDate(DatesUtil.plusDays(this.date, (daysAgo + 1)));
+		String dueDateLess = DatesUtil.simpleDate(dtoDueLess10Days.getDueDate());
 
 		assertEquals(daysAgoDateLess, dueDateLess);
 
 	}
 	
 	@Test
-	public void testDTONotFound() {
+	public void test_DTO_Not_Found() {
 		String id = UUID.randomUUID().toString();
 		Optional<DTO> dtoFoundDueGreater10Days = DataTestUtil.getDTOById(service, id);
 
@@ -242,7 +236,7 @@ public class BankslipsServiceImplTest {
 	}
 
 	@Test
-	public void testfindAll() {
+	public void test_find_All() {
 		List<DTO> listDTO = service.findAll();
 
 		listDTO.forEach(dto -> log.info(dto.toString()));
@@ -253,7 +247,7 @@ public class BankslipsServiceImplTest {
 	}
 
 	@Test
-	public void testePay() {
+	public void teste_make_a_pay() {
 		Optional<DTO> optionalDTO = DataTestUtil.getOptionalDTO(service, date, customer, totalInCents);
 		String id = getIdFromOptionalDTO(optionalDTO);
 		boolean wasPay = service.pay(optionalDTO, paymentDate);
@@ -265,7 +259,7 @@ public class BankslipsServiceImplTest {
 	}
 
 	@Test
-	public void testCancel() {
+	public void test_cancel_a_bankslip() {
 		Optional<DTO> optionalDTO = DataTestUtil.getOptionalDTO(service, date, customer, totalInCents);
 		String id = getIdFromOptionalDTO(optionalDTO);
 		boolean wasCancel = service.cancel(id);
@@ -277,7 +271,7 @@ public class BankslipsServiceImplTest {
 	}
 	
 	@Test
-	public void testCancelNotFound() {
+	public void test_Cancel_Not_Found() {
 		String id = UUID.randomUUID().toString();
 		boolean wasCancel = service.cancel(id);
 

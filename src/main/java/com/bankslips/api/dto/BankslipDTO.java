@@ -14,7 +14,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
+/**
+ * DTO Class for Bannkslips
+ * @author crist
+ *
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -23,6 +27,7 @@ import lombok.ToString;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class BankslipDTO extends DTO {
 
+	
 	private String customer;
 	private StatusEnum status;
 	private BigDecimal fine;

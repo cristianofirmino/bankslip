@@ -9,6 +9,12 @@ import com.bankslips.api.dto.BankslipDTO;
 import com.bankslips.api.dto.DTO;
 import com.bankslips.api.response.CustomResponse;
 
+/**
+ * Banksplit Validator
+ * 
+ * @author Cristiano Firmino
+ *
+ */
 @Component
 public class BanksplitValidator implements CustomValidator {
 
@@ -19,7 +25,7 @@ public class BanksplitValidator implements CustomValidator {
 		List<String> errors = new ArrayList<>();
 
 		if (bankslipDTO.getCustomer() == null || bankslipDTO.getDueDate() == null
-				|| bankslipDTO.getTotalInCents() == null) {
+				|| bankslipDTO.getTotalInCents() == null || bankslipDTO.getTotalInCents().doubleValue() <= 0) {
 
 			errors.add("Invalid bankslip provided.The possible reasons are:"
 					+ " A field of the provided bankslip was null or with invalid values");

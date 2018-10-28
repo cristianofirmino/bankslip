@@ -1,4 +1,4 @@
-package com.bankslips.api.util;
+package com.bankslips.api.tests.util;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -9,7 +9,13 @@ import com.bankslips.api.dto.DTO;
 import com.bankslips.api.entity.BankslipEntity;
 import com.bankslips.api.service.IService;
 
-public class DatabaseMockUtility {
+/**
+ * Utility Class for Mock Database and utilities
+ * 
+ * @author Cristiano Firmino
+ *
+ */
+public final class DatabaseMockUtility {
 
 	/**
 	 * Return a new BankslipEntity.
@@ -31,13 +37,13 @@ public class DatabaseMockUtility {
 	 * Return an equal DTO received by the controller.
 	 * 
 	 * @param date
-	 * @param consumer
+	 * @param customer
 	 * @param totalInCents
 	 * @return DTO
 	 */
-	public static DTO getOneDTO(Date date, String consumer, BigDecimal totalInCents) {
+	public static DTO getOneDTO(Date date, String customer, BigDecimal totalInCents) {
 		BankslipDTO dto = new BankslipDTO();
-		dto.setCustomer(consumer);
+		dto.setCustomer(customer);
 		dto.setDueDate(date);
 		dto.setTotalInCents(totalInCents);
 

@@ -4,7 +4,7 @@ import com.bankslips.api.dto.DTO;
 import com.bankslips.api.entity.AbstractEntity;
 
 /**
- * Interface that defines the parse DTO x AbstractEntity
+ * Interface that defines the contracts for parses of DTO x AbstractEntity
  * 
  * @author Cristiano Firmino
  *

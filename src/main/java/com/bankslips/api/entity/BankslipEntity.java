@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * Entity class Bankslip
+ * Entity Class Bankslip
  * 
  * @author Cristiano Firmino
  *

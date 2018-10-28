@@ -1,4 +1,4 @@
-package com.bankslips.api.repository;
+package com.bankslips.api.tests.repository;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -17,8 +17,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.bankslips.api.BankslipsApplication;
 import com.bankslips.api.entity.BankslipEntity;
-import com.bankslips.api.util.DatabaseMockUtility;
+import com.bankslips.api.repository.BankslipstRepository;
+import com.bankslips.api.tests.util.DatabaseMockUtility;
 
 /**
  * Test Class BanslipRepository
@@ -28,7 +30,7 @@ import com.bankslips.api.util.DatabaseMockUtility;
  */
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = BankslipsApplication.class)
 @ActiveProfiles("test")
 public class BankslipRepositoryTest {
 

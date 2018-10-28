@@ -1,4 +1,4 @@
-package com.bankslips.api.util;
+package com.bankslips.api.tests.util;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -10,7 +10,12 @@ import com.bankslips.api.entity.BankslipEntity;
 import com.bankslips.api.repository.BankslipstRepository;
 import com.bankslips.api.service.IService;
 
-public class DataTestUtil {
+/**
+ * Utility Test Class for many parse of the DTOs
+ * @author crist
+ *
+ */
+public final class DataTestUtil {
 
 	public static BankslipDTO getBankslipDTO(IService service, String id) {
 		BankslipDTO dtoPersistedAndPaid = (BankslipDTO) service.findById(id).get();
@@ -32,6 +37,11 @@ public class DataTestUtil {
 		return dtoFoundDueGreater10Days;
 	}
 
+	public static Optional<BankslipEntity> getBankslipEntityById(BankslipstRepository repository, String id) {
+		Optional<BankslipEntity> bankslipEntity = repository.findById(id);
+		return bankslipEntity;
+	}
+
 	public static Optional<DTO> getOptionalDTO(IService service, DTO dto) {
 		Optional<DTO> dtoPersisted = service.persist(dto);
 		return dtoPersisted;
@@ -49,6 +59,7 @@ public class DataTestUtil {
 
 	public static BankslipDTO getBankslipDTO(DTO dto) {
 		BankslipDTO bankslipDTO = (BankslipDTO) dto;
+		bankslipDTO.setId(null);
 		return bankslipDTO;
 	}
 
