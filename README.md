@@ -14,7 +14,7 @@ Basta que seja informado quais módulos a que se utilizar deseja utilizar
 O maior benefício do Spring Boot é que ele permite focar mais regras de negócio da aplicação.
 
 O start do projeto foi feito usando o SPRING INITIALIZR https://start.spring.io/.
-O módulo usandos foram Web, Lombok e DevTools;
+O módulo usandos foram Web, Lombok e DevTools e gerador de depencencias Apache Maven.
 
 ### Lombok
 O Lombok é um Framework criado sob licença MIT, podendo ser usado livremente em qualquer projeto Java. 
@@ -43,18 +43,24 @@ Nesse projeto ele foi usado para geração de documentação (legível) da API.
 
 ### Acesso
 
-Por padrão a aplicação irá rodar na porta 8080 (pode ser parametrizavel no profile de test (/bankslip/src/main/resources/application-test.properties) ou de produão(/bankslip/src/main/resources/application.properties) por meio da propriedade: server.port=8080 <- porta definida como exemplo.
-A url base para requisições no serviço (endpoit) é http://nome_do_servidor_ou_dominio_dns:porta/rest/bankslips. Exemplo: http://localhost:8080/rest/bankslips
+Por padrão a aplicação irá rodar na porta 8080.
+Pode ser parametrizavel no profile de test (/bankslip/src/main/resources/application-test.properties) 
+ou de produção (/bankslip/src/main/resources/application.properties) 
+por meio da propriedade: server.port=8080 <- porta definida como exemplo.
+
+A url base para requisições no serviço (endponit) é http://nome_do_servidor_ou_dominio_dns:porta/rest/bankslips. 
+Exemplo: http://localhost:8080/rest/bankslips
 
 ### Documentação da API
-Para visualizar a documentação da API acesse: url_base_da_API/swagger-ui.html#/ 
+Para visualizar a documentação da API acesse: url_base_da_API/swagger-ui.html#/
+Exemplo: http://localhost:8080/swagger-ui.html#/
 
 ## Build do projeto
 
 ### Maven
 
 #### Build do arquivo JAR
-Para fazer um build simples para gerar o arquivo .jar do serviço, acesse por meio do prompt de comandos do seu sistema operacional  o diretório base do projeto por exemplo(windows): D:\Dev\workspace\bankslip
+Para fazer um build simples e gerar o arquivo .jar do serviço, acesse por meio do prompt de comandos do seu sistema operacional  o diretório base do projeto por exemplo (windows): D:\Dev\workspace\bankslip
 
 Execute o comando:-> mvn install
 
