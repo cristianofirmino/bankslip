@@ -136,4 +136,4 @@ Em seguida execute o comando: docker run -it -p 9999:80 bankslips-1.0.0.jar
 
 Obs.: A porta 9999 no comando anterior é uma opção para expor a aplicação numa porta diferente da porta 8080 caso isso seja necessário.
 
-Em meu ambiente Docker a url de acesso da api poderá ficar assim: http://192.168.99.100:9999/rest/bankslips
+Em seu ambiente Docker a url de acesso da api poderá ficar assim: http://192.168.99.100:9999/rest/bankslips
