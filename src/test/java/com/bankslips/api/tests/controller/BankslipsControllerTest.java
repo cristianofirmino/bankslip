@@ -39,11 +39,18 @@ import com.bankslips.api.dto.BankslipDTO;
 import com.bankslips.api.entity.BankslipEntity;
 import com.bankslips.api.enums.StatusEnum;
 import com.bankslips.api.repository.BankslipstRepository;
+import com.bankslips.api.service.IService;
 import com.bankslips.api.tests.util.DataTestUtil;
 import com.bankslips.api.tests.util.DatabaseMockUtility;
 import com.bankslips.api.tests.util.DatesUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Contoller Test Class for Bankslips
+ * 
+ * @author Cristiano Firmino
+ *
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(value ="com.bankslips.api.*")
 @ActiveProfiles("test")
@@ -53,12 +60,9 @@ public class BankslipsControllerTest {
 	private MockMvc mockMvc;
 	private ObjectMapper objectMapper;
 
-	@Autowired
-	private BankslipsController controller;
-
-	@Autowired
-	BankslipstRepository repository;
-	
+	@Autowired private BankslipsController controller;
+	@Autowired BankslipstRepository repository;
+	@Autowired private IService service;
 	private int size = 10;
 	private int daysAgo = -11;
 	private String customer = "BankslipsControllerTest";
@@ -88,8 +92,27 @@ public class BankslipsControllerTest {
 	@Test
 	public void test_return_json_type_and_find_by_id() throws Exception {
 		String id = DataTestUtil.getIdFindCustomer(repository, 1, customer);
+		BankslipEntity entity = this.repository.findById(id).get();
 		
-		performRequestNoContentAndResulstWithoutFineAndPaymentDate(MockMvcRequestBuilders.get(API_URL + "/" + id), status().isOk());	
+		performRequestNoContentAndResulstWithoutFineAndPaymentDate(MockMvcRequestBuilders.get(API_URL + "/" + id), status().isOk(), entity);	
+	}
+	
+	
+	@Test
+	public void test_return_json_type_and_find_by_id_and_check_value_of_attributes() throws Exception {		
+		String id = DataTestUtil.getIdFindCustomer(repository, 1, customer);
+		BankslipEntity entity = this.repository.findById(id).get();
+
+		mockMvc.perform(MockMvcRequestBuilders.get(API_URL + "/" + id)
+				.contentType(jsonUtf8)
+				.accept(jsonUtf8))
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(entity.getId()))
+				.andExpect(jsonPath("$.customer").value(entity.getCustomer()))
+				.andExpect(jsonPath("$.due_date").value(DatesUtil.simpleDate(entity.getDueDate()).toString()))
+				.andExpect(jsonPath("$.total_in_cents").value(entity.getTotalInCents().toString()))
+				.andExpect(jsonPath("$.status").value(entity.getStatus().toString()));
 	}
 	
 	
@@ -105,8 +128,9 @@ public class BankslipsControllerTest {
 		BankslipDTO bankslipDTO = (BankslipDTO) DatabaseMockUtility.getOneDTO(date, customer + Math.random(), totalInCents);
 		bankslipDTO.setId(null);
 		String jsonObject = jacksonTester.write(bankslipDTO).getJson();
+		bankslipDTO.setStatus(StatusEnum.PENDING);
 
-		performRequestWithContentAndResultsWithoutFineAndPaymentDate(MockMvcRequestBuilders.post(API_URL), jsonObject);				
+		performRequestWithContentAndResultsWithoutFineAndPaymentDateAndNoIdCheck(MockMvcRequestBuilders.post(API_URL), jsonObject, bankslipDTO);				
 	}
 	
 	@Test
@@ -114,17 +138,18 @@ public class BankslipsControllerTest {
 		BankslipDTO bankslipDTO = (BankslipDTO) DatabaseMockUtility.getOneDTO(date, customer + Math.random(), totalInCents);
 		bankslipDTO.setId(null);
 		String json = jacksonTester.write(bankslipDTO).getJson();
+		bankslipDTO.setStatus(StatusEnum.PENDING);
 
 		String id = new JSONObject(
-				performRequestWithContentAndResultsWithoutFineAndPaymentDate(MockMvcRequestBuilders.post(API_URL), json)
+				performRequestWithContentAndResultsWithoutFineAndPaymentDateAndNoIdCheck(MockMvcRequestBuilders.post(API_URL), json, bankslipDTO)
 					.andReturn()
 					.getResponse().getContentAsString())
 					.get("id").toString();
 		
 		String idPersisted = DataTestUtil.getBankslipEntityById(repository, id).get().getId();
-		
-		performRequestNoContentAndResulstWithoutFineAndPaymentDate(MockMvcRequestBuilders.get(API_URL + "/" + id), status().isOk());
-		assertEquals(id, idPersisted);		
+		BankslipEntity entity = this.repository.findById(idPersisted).get();
+		performRequestNoContentAndResulstWithoutFineAndPaymentDate(MockMvcRequestBuilders.get(API_URL + "/" + id), status().isOk(), entity);
+		assertEquals(id, idPersisted);
 	}
 	
 	@Test
@@ -170,8 +195,9 @@ public class BankslipsControllerTest {
 	@Test
 	public void test_a_bankslip_due_date_greater_10_with_fine() throws Exception {
 		String id = DataTestUtil.getIdFindCustomer(repository, -11, customer);
+		BankslipDTO dto = (BankslipDTO) DataTestUtil.getDTOById(service, id).get();
 		
-		performRequestNoContentAndResulstWithFine(MockMvcRequestBuilders.get(API_URL + "/" + id), status().isOk());	
+		performRequestNoContentAndResulstWithFine(MockMvcRequestBuilders.get(API_URL + "/" + id), status().isOk(), dto);
 	}
 	
 	@Test
@@ -253,8 +279,9 @@ public class BankslipsControllerTest {
 		performRequestWithContent(MockMvcRequestBuilders.post(API_URL), status().isBadRequest(), json.toString());
 	}
 	
+	@SuppressWarnings("unused")
 	private ResultActions performRequestWithContentAndResultsWithoutFineAndPaymentDate(MockHttpServletRequestBuilder request,
-			String json) throws Exception {
+			String json, BankslipEntity entity) throws Exception {
 				
 		ResultActions resultsAction = this.mockMvc
 				.perform(request
@@ -269,13 +296,43 @@ public class BankslipsControllerTest {
 				.andExpect(jsonPath("$.total_in_cents").exists())
 				.andExpect(jsonPath("$.status").exists())
 				.andExpect(jsonPath("$.fine").doesNotExist())
-				.andExpect(jsonPath("$.payment_date").doesNotExist());
+				.andExpect(jsonPath("$.payment_date").doesNotExist())
+				.andExpect(jsonPath("$.id").value(entity.getId()))
+				.andExpect(jsonPath("$.customer").value(entity.getCustomer()))
+				.andExpect(jsonPath("$.due_date").value(DatesUtil.simpleDate(entity.getDueDate()).toString()))
+				.andExpect(jsonPath("$.total_in_cents").value(entity.getTotalInCents().toString()))
+				.andExpect(jsonPath("$.status").value(entity.getStatus().toString()));
+		
+		return resultsAction;
+	}
+	
+	private ResultActions performRequestWithContentAndResultsWithoutFineAndPaymentDateAndNoIdCheck(MockHttpServletRequestBuilder request,
+			String json, BankslipDTO dto) throws Exception {
+				
+		ResultActions resultsAction = this.mockMvc
+				.perform(request
+				.content(json)
+				.contentType(jsonUtf8)
+				.accept(jsonUtf8))
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.id").exists())
+				.andExpect(jsonPath("$.due_date").exists())
+				.andExpect(jsonPath("$.customer").exists())
+				.andExpect(jsonPath("$.total_in_cents").exists())
+				.andExpect(jsonPath("$.status").exists())
+				.andExpect(jsonPath("$.fine").doesNotExist())
+				.andExpect(jsonPath("$.payment_date").doesNotExist())
+				.andExpect(jsonPath("$.customer").value(dto.getCustomer()))
+				.andExpect(jsonPath("$.due_date").value(DatesUtil.simpleDate(dto.getDueDate()).toString()))
+				.andExpect(jsonPath("$.total_in_cents").value(dto.getTotalInCents().toString()))
+				.andExpect(jsonPath("$.status").value(dto.getStatus().toString()));
 		
 		return resultsAction;
 	}
 	
 	private ResultActions performRequestNoContentAndResulstWithoutFineAndPaymentDate(MockHttpServletRequestBuilder request,
-			ResultMatcher status) throws Exception {
+			ResultMatcher status, BankslipEntity entity) throws Exception {
 		
 		ResultActions resultsAction = this.mockMvc
 				.perform(request
@@ -289,13 +346,18 @@ public class BankslipsControllerTest {
 				.andExpect(jsonPath("$.total_in_cents").exists())
 				.andExpect(jsonPath("$.status").exists())
 				.andExpect(jsonPath("$.fine").doesNotExist())
-				.andExpect(jsonPath("$.payment_date").doesNotExist());
+				.andExpect(jsonPath("$.payment_date").doesNotExist())
+				.andExpect(jsonPath("$.id").value(entity.getId()))
+				.andExpect(jsonPath("$.customer").value(entity.getCustomer()))
+				.andExpect(jsonPath("$.due_date").value(DatesUtil.simpleDate(entity.getDueDate()).toString()))
+				.andExpect(jsonPath("$.total_in_cents").value(entity.getTotalInCents().toString()))
+				.andExpect(jsonPath("$.status").value(entity.getStatus().toString()));
 		
 		return resultsAction;
 	}
 	
 	private ResultActions performRequestNoContentAndResulstWithFine(MockHttpServletRequestBuilder request,
-			ResultMatcher status) throws Exception {
+			ResultMatcher status, BankslipDTO dto) throws Exception {
 		
 		ResultActions resultsAction = this.mockMvc
 				.perform(request
@@ -309,7 +371,13 @@ public class BankslipsControllerTest {
 				.andExpect(jsonPath("$.total_in_cents").exists())
 				.andExpect(jsonPath("$.status").exists())
 				.andExpect(jsonPath("$.fine").exists())
-				.andExpect(jsonPath("$.payment_date").doesNotExist());
+				.andExpect(jsonPath("$.payment_date").doesNotExist())
+				.andExpect(jsonPath("$.id").value(dto.getId().get()))
+				.andExpect(jsonPath("$.customer").value(dto.getCustomer()))
+				.andExpect(jsonPath("$.due_date").value(DatesUtil.simpleDate(dto.getDueDate()).toString()))
+				.andExpect(jsonPath("$.total_in_cents").value(dto.getTotalInCents().toString()))
+				.andExpect(jsonPath("$.fine").value(dto.getFine().toString()))
+				.andExpect(jsonPath("$.status").value(dto.getStatus().toString()));
 		
 		return resultsAction;
 	}
@@ -383,9 +451,11 @@ public class BankslipsControllerTest {
 	}
 	
 	private String getStringFineFromResults(String id) throws JSONException, UnsupportedEncodingException, Exception {
+		BankslipDTO dto = (BankslipDTO) DataTestUtil.getDTOById(service, id).get();
+		
 		return new JSONObject(
 				performRequestNoContentAndResulstWithFine(MockMvcRequestBuilders.get(API_URL + "/" + id),
-					status().isOk())
+					status().isOk(), dto)
 					.andReturn()
 					.getResponse()
 					.getContentAsString())
