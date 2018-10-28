@@ -1,0 +1,11 @@
+com.bankslips.api
+com.bankslips.api.controller
+com.bankslips.api.dto
+com.bankslips.api.entity
+com.bankslips.api.enums
+com.bankslips.api.parse
+com.bankslips.api.repository
+com.bankslips.api.response
+com.bankslips.api.service
+com.bankslips.api.util
+com.bankslips.api.validation

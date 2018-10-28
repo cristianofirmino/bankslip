@@ -15,6 +15,7 @@ public class BankslipsApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		BankslipsApplication.main(new String[] {});
 	}
 
 }

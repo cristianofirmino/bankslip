@@ -34,7 +34,7 @@ public class BankslipEntity extends AbstractEntity {
 	@Column(name = "due_date", nullable = false)
 	private Date dueDate;
 
-	@Column(name = "total_in_cents", nullable = false)
+	@Column(name = "total_in_cents", nullable = false, scale = 2)
 	private BigDecimal totalInCents;
 
 	@Column(name = "customer", nullable = false)

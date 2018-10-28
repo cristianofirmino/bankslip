@@ -28,7 +28,7 @@ public final class DatabaseMockUtility {
 		Date date = new Date();
 		bankslip.setCustomer(customer);
 		bankslip.setDueDate(DatesUtil.plusDays(date, days));
-		bankslip.setTotalInCents(new BigDecimal(Math.random() * 1000.00));
+		bankslip.setTotalInCents(new BigDecimal(Math.random() * 1000.999));
 
 		return bankslip;
 	}

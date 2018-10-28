@@ -111,7 +111,7 @@ public class BankslipsControllerTest {
 				.andExpect(jsonPath("$.id").value(entity.getId()))
 				.andExpect(jsonPath("$.customer").value(entity.getCustomer()))
 				.andExpect(jsonPath("$.due_date").value(DatesUtil.simpleDate(entity.getDueDate()).toString()))
-				.andExpect(jsonPath("$.total_in_cents").value(entity.getTotalInCents().toString()))
+				.andExpect(jsonPath("$.total_in_cents").value((entity.getTotalInCents().setScale(2, BigDecimal.ROUND_HALF_UP).toString())))
 				.andExpect(jsonPath("$.status").value(entity.getStatus().toString()));
 	}
 	
@@ -300,7 +300,7 @@ public class BankslipsControllerTest {
 				.andExpect(jsonPath("$.id").value(entity.getId()))
 				.andExpect(jsonPath("$.customer").value(entity.getCustomer()))
 				.andExpect(jsonPath("$.due_date").value(DatesUtil.simpleDate(entity.getDueDate()).toString()))
-				.andExpect(jsonPath("$.total_in_cents").value(entity.getTotalInCents().toString()))
+				.andExpect(jsonPath("$.total_in_cents").value(entity.getTotalInCents()))
 				.andExpect(jsonPath("$.status").value(entity.getStatus().toString()));
 		
 		return resultsAction;
@@ -325,7 +325,7 @@ public class BankslipsControllerTest {
 				.andExpect(jsonPath("$.payment_date").doesNotExist())
 				.andExpect(jsonPath("$.customer").value(dto.getCustomer()))
 				.andExpect(jsonPath("$.due_date").value(DatesUtil.simpleDate(dto.getDueDate()).toString()))
-				.andExpect(jsonPath("$.total_in_cents").value(dto.getTotalInCents().toString()))
+				.andExpect(jsonPath("$.total_in_cents").value((dto.getTotalInCents().setScale(2, BigDecimal.ROUND_HALF_UP).toString())))
 				.andExpect(jsonPath("$.status").value(dto.getStatus().toString()));
 		
 		return resultsAction;
@@ -350,7 +350,7 @@ public class BankslipsControllerTest {
 				.andExpect(jsonPath("$.id").value(entity.getId()))
 				.andExpect(jsonPath("$.customer").value(entity.getCustomer()))
 				.andExpect(jsonPath("$.due_date").value(DatesUtil.simpleDate(entity.getDueDate()).toString()))
-				.andExpect(jsonPath("$.total_in_cents").value(entity.getTotalInCents().toString()))
+				.andExpect(jsonPath("$.total_in_cents").value((entity.getTotalInCents().setScale(2, BigDecimal.ROUND_HALF_UP).toString())))
 				.andExpect(jsonPath("$.status").value(entity.getStatus().toString()));
 		
 		return resultsAction;
@@ -375,7 +375,7 @@ public class BankslipsControllerTest {
 				.andExpect(jsonPath("$.id").value(dto.getId().get()))
 				.andExpect(jsonPath("$.customer").value(dto.getCustomer()))
 				.andExpect(jsonPath("$.due_date").value(DatesUtil.simpleDate(dto.getDueDate()).toString()))
-				.andExpect(jsonPath("$.total_in_cents").value(dto.getTotalInCents().toString()))
+				.andExpect(jsonPath("$.total_in_cents").value((dto.getTotalInCents().setScale(2, BigDecimal.ROUND_HALF_UP).toString())))
 				.andExpect(jsonPath("$.fine").value(dto.getFine().toString()))
 				.andExpect(jsonPath("$.status").value(dto.getStatus().toString()));
 		

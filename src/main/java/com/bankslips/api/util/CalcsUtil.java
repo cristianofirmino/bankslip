@@ -9,7 +9,7 @@ import com.bankslips.api.dto.BankslipDTO;
 import com.bankslips.api.dto.DTO;
 
 /**
- * Utility Class for Calculations
+ * Utility Class for Business Calculations
  * 
  * @author Cristiano Firmino
  *
