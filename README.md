@@ -32,12 +32,14 @@ Oferece configuração de propriedades úteis para desenvolvimento, reinicializa
 O Maven é uma ferramenta desenvolvida pela Apache para gerenciamento de dependências e automatização de builds.
 
 ### Docker Maven Plugin
-
 É um plugin desenvolvido pela Spotify que por meio do Maven facilita a dockerização de uma aplicação SpringBoot.
 
 ### Swagger
 O Swagger é um projeto composto por algumas ferramentas que auxiliam o desenvolvedor de APIs REST em algumas tarefas.
 Nesse projeto ele foi usado para geração de documentação (legível) da API.
+
+### H2 Database Engine
+H2 é um banco de dados relacional escrito em Java. Ele pode ser embarcado em aplicações Java ou rodar no modo cliente-servidor. Ele é carregado diretamente na memória, é open source e suporta a JDBC API.
 
 ## Instruções para executar a aplicação
 
